@@ -4,7 +4,6 @@ import java.io.InputStreamReader
 import java.net.URI
 import java.nio.charset.StandardCharsets
 
-import com.google.common.io.CharStreams
 import org.apache.http.client.methods.{HttpDelete, HttpGet, HttpPost, HttpPut}
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.client.{CookieStore, HttpClient}
@@ -25,6 +24,9 @@ object HttpClientUtil {
 
   def uriBuilder(scheme: String, host: String, port: Int, path: String): URIBuilder =
     new URIBuilder().setScheme(scheme).setHost(host).setPort(port).setPath(path)
+
+  def uriBuilder(scheme: String, host: String, port: Int): URIBuilder =
+    new URIBuilder().setScheme(scheme).setHost(host).setPort(port)
 
   def createCookieStore(): CookieStore = new BasicCookieStore
 
@@ -68,10 +70,6 @@ object HttpClientUtil {
   }
 
   def httpEntity(s: String): HttpEntity = new ByteArrayEntity(s.getBytes(StandardCharsets.UTF_8))
-
-  def httpContentString(r: HttpResponse): String = {
-    CharStreams.toString(new InputStreamReader(r.getEntity.getContent, StandardCharsets.UTF_8))
-  }
 
   def httpStatusCode(r: HttpResponse): Int = {
     r.getStatusLine.getStatusCode

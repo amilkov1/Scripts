@@ -1,7 +1,7 @@
 /**
   * Created by amilkov on 10/23/16.
   */
-object Example {    
+/*object Example {    
 
   trait Functor[F[_]] { 
     def map[A, B](a: F[A], f: A => B): F[B] 
@@ -18,4 +18,4 @@ object Example {    
   def fmap2[F[_], A, B](a: F[A], f: A => B)(implicit ev: Functor[F]): F[B] = { 
     ev.map(a, f) 
   }
-}
+}*/

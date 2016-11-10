@@ -2,7 +2,7 @@ package com.weather.scripts
 
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.Imports._
-import com.weather.ssg.configuration.Hokum._
+import com.weather.hokum.Hokum._
 import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import com.weather.scripts.HttpClientUtil._
@@ -15,18 +15,17 @@ object IanaTnZn {
   implicit val formats = DefaultFormats
 
   def main(args: Array[String]) : Unit = {
-    addIanas
+    //addIanas
   }
 
-  def addIanas = {
+  /*def addIanas = {
     val wxd = Fuckoff.getMongoDB(Fuckoff.config, "wxd.mongo")()
     wxd.addOption(16)
-    //("ZFRecord", "ZFData", "ZFData")
     List(("ZFRecord", "ZFData", "ZFData")).foreach{ case(rec, country, target) =>
       wxd(rec).find(MongoDBObject("ZFData.ianaTmZn" -> MongoDBObject("$exists"-> false))).foreach { l =>
         val lat = Encoder.getString(l, Array(country, "lat")).get
         val long = Encoder.getString(l, Array(country, "long")).get
-        callLocService(lat, long) match {
+        callGeohitService(lat, long) match {
           case Some(x) =>
             Encoder.getObject(l,  Array(target)).asInstanceOf[DBObject].update("ianaTmZn", x)
             wxd(rec).save(l, WriteConcern.Normal)
@@ -37,10 +36,10 @@ object IanaTnZn {
         }
       }
     }
-  }
-  def callLocService(lat: String, long: String) = {
+  }*/
+  def callGeohitService(lat: String, long: String) = {
 
-      import LocationService._
+      import GeohitService._
 
       val uri = builder
         .setParameter("geocode", lat + "," + long)
@@ -64,7 +63,7 @@ object IanaTnZn {
 }
 
 
-private object LocationService {
+private object GeohitService {
 
 
   val config = getConfig("scripts", fileExtension = "conf")
@@ -75,7 +74,7 @@ private object LocationService {
 
   val host = config.getString(prefix + ".host")
   val port = config.getInt(prefix + ".port")
-  val path = config.getString(prefix + ".path")
+  val path = config.getString(prefix + ".geohitPath")
   val builder = uriBuilder("http", host, port, path)
     .setParameter("format", config.getString(prefix + ".format"))
       .setParameter("product", config.getString(prefix + ".product"))
